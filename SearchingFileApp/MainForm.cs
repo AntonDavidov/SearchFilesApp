@@ -16,6 +16,9 @@ using System.Windows.Forms;
 
 namespace SearchingFileApp
 {
+    /// <summary>
+    /// Класс главной формы приложения
+    /// </summary>
     public partial class MainForm : Form
     {
         #region Fields
@@ -160,8 +163,20 @@ namespace SearchingFileApp
             Close();
         }
         #region Support Methods
+        /// <summary>
+        /// Метод, осуществляющий поиск файла в отдельном потоке
+        /// </summary>
+        /// <param name="dirPath">Стартовая папка для поиска</param>
+        /// <param name="filePattern">Шаблон поиска файла</param>
+        /// <param name="searchingText">Искомый текст</param>
+        /// <param name="searchOption">Режим поиска</param>
+        /// <param name="cToken">Токен отмены</param>
+        /// <param name="processedFile">Передача из потока имени обрабатываемого файла</param>
+        /// <param name="searchedFile">Передача из потока имени найденного файла</param>
+        /// <param name="end">Передача из потока информации о том, что поиск завёршен</param>
+        /// <returns></returns>
         Task SearchFilesAync(string dirPath,
-                               string fileMask,
+                               string filePattern,
                                string searchingText,
                                TextSearchOption searchOption,
                                CancellationToken cToken,
@@ -173,7 +188,7 @@ namespace SearchingFileApp
             {
                 dirPath += "\\";
                 IEnumerable<string> fileNames = Directory.EnumerateFiles(dirPath,
-                                                                        fileMask,
+                                                                        filePattern,
                                                                         SearchOption.AllDirectories)
                                                      .Select(fileName => fileName.Replace(dirPath, ""));
                 Regex regex;
@@ -234,6 +249,16 @@ namespace SearchingFileApp
                 end.Report(true);
             }, cToken);
         }
+        /// <summary>
+        /// Метод, осуществляющий добавление в элемент управления TreeView нового TreeNode
+        /// по ссылке на коллекцию 
+        /// </summary>
+        /// <param name="tNCollection">Ссылка на колекцию TreeNode элементов дерева TreeView</param>
+        /// <param name="pathParts">Список частей относильного пути файла(относительно искомой 
+        /// папки). Части пути - это строка, разбитая на массив строк имен всех содержащих папок
+        /// и имени файла с удалёнными слешами.
+        /// </param>
+        /// <param name="fileName">Абсолютный путь файла</param>
         void AddNodeToTreeView(TreeNodeCollection tNCollection, List<string> pathParts, string fileName)
         {
             bool finded = false;
