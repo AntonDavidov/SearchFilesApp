@@ -137,6 +137,8 @@ namespace SearchingFileApp
                                                 searchedFile,
                                                 end);
             timeLeft = 0;
+            processedFilesNumViewLabel.Text = "0";
+            processedTimeViewLabel.Text = "0 сек";
             timer.Start();
         }
         private void StopSearchButton_Click(object sender, EventArgs e)
@@ -152,7 +154,7 @@ namespace SearchingFileApp
         private void Timer_Tick(object sender, EventArgs e)
         {
             timeLeft++;
-            processedTimeViewLabel.Text = timeLeft.ToString();
+            processedTimeViewLabel.Text = timeLeft.ToString() + " сек";
         }
         private void SearchedFilesTreeView_MouseDoubleClick(object sender, MouseEventArgs e)
         {
